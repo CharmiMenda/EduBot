@@ -1,0 +1,452 @@
+Act as a Senior Software Architect, Full Stack Engineer, NLP Engineer, and System Designer.
+
+Design and generate a complete production-ready AI-powered Placement Preparation Web Application that helps college students prepare for campus placements using AI chatbot assistance, preparation materials, practice tests, and placement scheduling.
+
+The system must follow industry-grade architecture, scalable design, modular development, and clean coding practices.
+
+Generate the FULL SOURCE CODE for the entire project.
+
+1️⃣ System Overview
+
+The application is called:
+
+Placement Prime – AI Powered Placement Preparation Platform
+
+It should include:
+
+AI Chatbot for placement queries
+
+Placement drive calendar
+
+Role-wise preparation materials
+
+Practice tests and mock interviews
+
+Centralized database
+
+Admin dashboard
+
+The system should be built with separate services for frontend, backend, and AI model.
+
+2️⃣ Technology Stack
+
+Use the following technologies.
+
+Frontend
+
+React.js or Next.js
+
+Tailwind CSS
+
+Axios
+
+FullCalendar (placement calendar)
+
+React Router
+
+Chart.js (analytics dashboard)
+
+Backend
+
+Node.js
+
+Express.js
+
+JWT authentication
+
+RESTful APIs
+
+AI / NLP Service
+
+Python
+
+FastAPI
+
+HuggingFace Transformers
+
+BERT model for intent classification
+
+Database
+
+MongoDB
+
+Mongoose ORM
+
+DevOps
+
+Docker
+
+GitHub repository
+
+Environment variables
+
+Cloud deployment ready
+
+3️⃣ Project Folder Structure
+
+Generate the following clean folder structure
+
+placement-prime/
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── components/
+│   │   ├── services/
+│   │   ├── hooks/
+│   │   └── styles/
+│
+├── backend/
+│   ├── controllers/
+│   ├── routes/
+│   ├── models/
+│   ├── middleware/
+│   ├── services/
+│   └── config/
+│
+├── ai-chatbot/
+│   ├── dataset/
+│   ├── model/
+│   ├── training/
+│   └── inference/
+│
+└── docs/
+
+Explain the purpose of each folder and file.
+
+4️⃣ Module 1: AI Chatbot (BERT-Based)
+
+Develop an AI placement assistant chatbot.
+
+Features
+
+The chatbot must:
+
+• Understand student queries
+• Detect intent using BERT intent classification
+• Generate responses based on dataset
+• Provide role-based preparation suggestions
+
+Supported Query Types
+
+Examples:
+
+“What is the eligibility for Microsoft?”
+
+“How to prepare for software engineer roles?”
+
+“Give aptitude resources”
+
+“What is Amazon interview process?”
+
+Implementation
+
+Create:
+
+Dataset format
+
+BERT fine-tuning pipeline
+
+Intent classification model
+
+Response generation logic
+
+Confidence threshold detection
+
+Fallback rule-based system
+
+Example dataset format:
+
+{
+ "intent": "company_eligibility",
+ "patterns": [
+   "Eligibility for Amazon",
+   "What CGPA required for Google",
+   "Company eligibility criteria"
+ ],
+ "responses": [
+   "Most companies require 7.0+ CGPA..."
+ ]
+}
+API
+POST /chatbot/query
+
+Request
+
+{
+ "message": "What is the Microsoft interview process?"
+}
+
+Response
+
+{
+ "intent": "company_interview_process",
+ "confidence": 0.93,
+ "response": "Microsoft typically has 3 rounds..."
+}
+5️⃣ Module 2: Placement Calendar
+
+Develop a dynamic placement event calendar.
+
+Features
+
+Display:
+
+company name
+
+job role
+
+visit date
+
+registration deadline
+
+UI
+
+Calendar view with:
+
+monthly schedule
+
+event popup
+
+event filtering
+
+APIs
+GET /placements
+POST /placements
+PUT /placements/:id
+DELETE /placements/:id
+6️⃣ Module 3: Role-wise Preparation Materials
+
+Create a learning resource repository.
+
+Role Categories
+
+Software Engineer
+
+Data Analyst
+
+ML Engineer
+
+Consulting
+
+Product roles
+
+Features
+
+Resource search
+
+Tag filtering
+
+Resource bookmarking
+
+Chatbot recommendations
+
+Example record
+
+{
+ title: "Top 100 DSA Problems",
+ role: "Software Engineer",
+ type: "coding practice",
+ link: "leetcode.com/..."
+}
+7️⃣ Module 4: Tests and Mock Interviews
+
+Develop a practice testing system.
+
+Types of Tests
+
+Aptitude tests
+
+Technical MCQs
+
+Coding challenges
+
+Mock Interview
+
+Include:
+
+timer
+
+random question generation
+
+interview simulation
+
+Evaluation Metrics
+
+score
+
+accuracy
+
+time analysis
+
+AI Feedback
+
+Generate feedback such as:
+
+weak topics
+
+improvement suggestions
+
+recommended materials
+
+8️⃣ Module 5: Database System
+
+Design MongoDB collections.
+
+Users
+user_id
+name
+email
+password
+role
+created_at
+Companies
+company_name
+roles
+eligibility
+package
+selection_process
+Placement Events
+company
+date
+deadline
+role
+Materials
+title
+category
+role
+link
+tags
+Test Results
+user_id
+test_id
+score
+accuracy
+time_taken
+
+Ensure:
+
+indexing
+
+optimized queries
+
+schema validation
+
+9️⃣ Module 6: Admin Dashboard
+
+Create a secure admin panel.
+
+Admin capabilities:
+
+manage chatbot knowledge base
+
+add placement drives
+
+upload preparation materials
+
+view user analytics
+
+Dashboard analytics should show:
+
+chatbot usage
+
+popular queries
+
+student engagement
+
+test performance statistics
+
+🔟 Frontend Pages
+
+Create the following UI pages.
+
+Landing Page
+
+Login Page
+
+Signup Page
+
+Student Dashboard
+
+Chatbot Interface
+
+Placement Calendar
+
+Preparation Materials
+
+Practice Tests
+
+Mock Interview Page
+
+Admin Dashboard
+
+Use modern UI with Tailwind CSS.
+
+1️⃣1️⃣ Security Features
+
+Include:
+
+JWT authentication
+
+password hashing
+
+protected API routes
+
+role-based access
+
+1️⃣2️⃣ Advanced Features
+
+Add:
+
+chatbot memory context
+
+recommendation engine for materials
+
+event reminders
+
+analytics tracking
+
+search optimization
+
+1️⃣3️⃣ DevOps and Deployment
+
+Generate:
+
+Docker configuration
+
+.env setup
+
+GitHub project structure
+
+deployment guide
+
+1️⃣4️⃣ Documentation
+
+Generate a complete README.md that includes:
+
+project overview
+
+tech stack
+
+setup guide
+
+architecture diagram
+
+API documentation
+
+module explanation
+
+Expected Output
+
+The AI must generate:
+
+1️⃣ Full project architecture
+2️⃣ Backend APIs
+3️⃣ React frontend components
+4️⃣ MongoDB schemas
+5️⃣ BERT training pipeline
+6️⃣ Chatbot inference service
+7️⃣ Deployment instructions
+8️⃣ Complete documentation
+
+The final result should be a fully functional AI-powered placement preparation platform.
