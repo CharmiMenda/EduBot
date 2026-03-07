@@ -60,7 +60,10 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  const { seedDatabase } = await import("./routes");
   await registerRoutes(httpServer, app);
+  
+  await seedDatabase().catch(console.error);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
