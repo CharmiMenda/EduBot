@@ -1,0 +1,496 @@
+Act as a Senior Full Stack Engineer, AI Architect, and EdTech Platform Designer.
+
+Design and implement a complete Admin Panel and Intelligent Placement Guidance System for an AI-powered Placement Preparation Web Application.
+
+The platform helps students prepare for campus placements by providing company placement information, preparation materials, AI chatbot guidance, quizzes, and mock interviews.
+
+The system must include Admin functionalities, Student dashboard features, AI personalization, and skill-based preparation automation.
+
+Generate complete architecture, database schema, APIs, workflows, and UI structure.
+
+1️⃣ Technology Stack
+
+Use a modern scalable stack.
+
+Frontend
+
+React.js / Next.js
+
+Tailwind CSS
+
+React Router
+
+Axios
+
+Backend
+
+Node.js
+
+Express.js
+
+JWT Authentication
+
+Database
+
+MongoDB
+
+Mongoose
+
+AI Services
+
+Python FastAPI
+
+BERT / Transformer models
+
+Recommendation engine
+
+Other Services
+
+Cloud storage for materials
+
+Scheduled background jobs
+
+2️⃣ Admin Panel System
+
+Create a secure admin dashboard where administrators can manage placements, materials, and platform content.
+
+Admin must log in using secure authentication with role-based access control.
+
+Admin Dashboard Features
+
+The admin dashboard should display:
+
+Total students registered
+
+Upcoming placement drives
+
+Materials uploaded
+
+Chatbot usage statistics
+
+Mock test participation
+
+3️⃣ Placement Management Module
+
+Admins should be able to create and manage placement drives.
+
+Admin Form Fields
+
+Admin can add:
+
+Company Details
+
+company_name
+
+company_logo
+
+company_description
+
+Placement Details
+
+job_role
+
+job_location
+
+pay_range (CTC range)
+
+bond_duration (if applicable)
+
+eligibility_criteria
+
+required_skills
+
+selection_process
+
+Application Details
+
+apply_link
+
+application_deadline
+
+placement_date
+
+Job Description
+
+detailed_JD
+
+Admin Functionalities
+
+Admin should be able to:
+
+Add new placement drives
+
+Edit placement information
+
+Delete outdated placements
+
+Schedule placement announcements
+
+Student View
+
+When a student clicks "View Details", they should see:
+
+Company Profile
+
+Company description
+
+Job role
+
+Pay range
+
+Bond information
+
+Job Details
+
+Job description
+
+Required skills
+
+Selection process
+
+Application Section
+
+Apply button
+
+Deadline reminder
+
+4️⃣ Preparation Material Management
+
+Admins should be able to upload preparation materials.
+
+Material Types
+
+Admins can upload:
+
+PDF notes
+
+Coding practice links
+
+Interview questions
+
+Aptitude resources
+
+Video tutorials
+
+Material Upload Fields
+
+material_title
+
+category
+
+role_category (Software Engineer, Analyst, etc.)
+
+description
+
+upload_file / external_link
+
+tags
+
+difficulty_level
+
+Student Access
+
+Students should be able to:
+
+search materials
+
+filter by role
+
+bookmark resources
+
+view recommended materials
+
+5️⃣ AI Assistant Chat System
+
+The platform includes an AI placement assistant chatbot.
+
+Features
+
+The chatbot should:
+
+Answer placement-related questions
+
+Suggest preparation materials
+
+Explain company recruitment processes
+
+Provide interview tips
+
+Chat History Storage
+
+Every student conversation should be stored.
+
+Database fields:
+
+chat_id
+user_id
+message
+response
+timestamp
+intent
+Context-Aware AI
+
+The AI assistant must:
+
+analyze previous conversations
+
+detect user interests
+
+understand weak areas
+
+Example:
+
+If a student frequently asks about DSA problems, the chatbot should recommend:
+
+DSA preparation materials
+
+coding practice tests
+
+mock interviews
+
+6️⃣ Personalized Preparation Engine
+
+Build a recommendation system that analyzes:
+
+user chat history
+
+upcoming placements
+
+required skills
+
+Then it should generate a personalized preparation plan.
+
+Example Workflow
+
+If a company requires:
+
+skills: Python, DSA, SQL
+
+The system should automatically recommend:
+
+Preparation materials:
+
+Python interview questions
+
+SQL practice sets
+
+DSA coding problems
+
+Practice modules:
+
+coding quizzes
+
+aptitude tests
+
+mock interviews
+
+7️⃣ Smart Mock Interview System
+
+The system should automatically generate mock interviews based on company requirements.
+
+Example:
+
+Company: Amazon
+Required Skills:
+
+Data Structures
+
+Problem Solving
+
+System Design
+
+The system should create a mock interview session including:
+
+Round 1
+
+aptitude questions
+
+Round 2
+
+coding challenges
+
+Round 3
+
+behavioral questions
+
+Mock Interview Features
+
+Timer-based interview
+
+Random question generation
+
+Difficulty level adjustment
+
+AI-based feedback
+
+8️⃣ Quiz and Practice Test System
+
+The system should generate quizzes based on:
+
+company skill requirements
+
+student weaknesses
+
+previously attempted tests
+
+Quiz Types
+
+aptitude quizzes
+
+coding challenges
+
+technical MCQs
+
+Evaluation Metrics
+
+After each test show:
+
+score
+
+accuracy
+
+time taken
+
+topic analysis
+
+9️⃣ Database Design
+
+Design the following MongoDB collections.
+
+Users
+user_id
+name
+email
+password
+role
+skills
+created_at
+Placements
+company_name
+company_description
+job_role
+pay_range
+bond_duration
+required_skills
+job_description
+apply_link
+deadline
+placement_date
+Materials
+title
+role_category
+description
+file_url
+external_link
+tags
+difficulty
+uploaded_by
+Chat History
+chat_id
+user_id
+message
+response
+intent
+timestamp
+Mock Interviews
+interview_id
+user_id
+company
+questions
+score
+feedback
+date
+🔟 System Workflow
+Student Journey
+
+Student logs in
+
+Views upcoming placements
+
+Clicks View Details
+
+Reviews company requirements
+
+Gets AI recommendations
+
+Practices quizzes and mock interviews
+
+Tracks improvement
+
+Admin Workflow
+
+Admin logs into dashboard
+
+Adds new placement drives
+
+Uploads preparation materials
+
+Updates company requirements
+
+Monitors student activity
+
+1️⃣1️⃣ UI Pages Required
+
+Student Side
+
+Dashboard
+
+Placement List
+
+Placement Details Page
+
+Preparation Materials
+
+Quiz Practice
+
+Mock Interview
+
+AI Chat Assistant
+
+Admin Side
+
+Admin Dashboard
+
+Add Placement
+
+Manage Placements
+
+Upload Materials
+
+Manage Materials
+
+Analytics
+
+1️⃣2️⃣ Advanced AI Features
+
+Include:
+
+recommendation engine
+
+skill-gap detection
+
+adaptive learning paths
+
+AI-generated mock interview questions
+
+1️⃣3️⃣ Expected Output
+
+Generate:
+
+complete project architecture
+
+frontend components
+
+backend APIs
+
+database schema
+
+AI recommendation system logic
+
+chatbot integration
+
+admin dashboard design
+
+deployment instructions
+
+The final system should function as a full AI-powered placement preparation platform.
