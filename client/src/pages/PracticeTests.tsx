@@ -4,8 +4,10 @@ import { PlayCircle, Target, Award, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function PracticeTests() {
+  const { user } = useAuth();
   const { data: results, isLoading } = useTestResults();
   const { mutate: submitResult, isPending } = useSubmitTestResult();
   const [activeTest, setActiveTest] = useState<string | null>(null);
@@ -13,7 +15,9 @@ export default function PracticeTests() {
   // Mock taking a test
   const handleCompleteTest = () => {
     if (!activeTest) return;
+    if (!user) return;
     submitResult({
+      userId: user.id,
       testType: activeTest,
       score: Math.floor(Math.random() * 40) + 60, // 60-100
       accuracy: Math.floor(Math.random() * 30) + 70, // 70-100
@@ -54,7 +58,7 @@ export default function PracticeTests() {
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {["Aptitude & Logical", "Data Structures & Algos", "System Design Mock"].map((test, i) => (
-              <motion.div 
+              <motion.div
                 key={test}
                 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
                 className="bg-card rounded-3xl p-6 border border-border hover:border-primary/50 hover:shadow-xl transition-all"
@@ -75,17 +79,17 @@ export default function PracticeTests() {
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-2xl font-bold flex items-center gap-2"><Award className="w-6 h-6 text-primary" /> Performance Analytics</h2>
             </div>
-            
+
             {results && results.length > 0 ? (
               <div className="h-[300px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'hsl(var(--muted-foreground))', fontSize: 12}} dy={10} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fill: 'hsl(var(--muted-foreground))', fontSize: 12}} />
-                    <Tooltip 
-                      cursor={{fill: 'hsl(var(--secondary))'}}
-                      contentStyle={{backgroundColor: 'hsl(var(--card))', borderRadius: '12px', border: '1px solid hsl(var(--border))', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}}
+                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} dy={10} />
+                    <YAxis axisLine={false} tickLine={false} tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }} />
+                    <Tooltip
+                      cursor={{ fill: 'hsl(var(--secondary))' }}
+                      contentStyle={{ backgroundColor: 'hsl(var(--card))', borderRadius: '12px', border: '1px solid hsl(var(--border))', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                     />
                     <Bar dataKey="score" name="Score %" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={40} />
                     <Bar dataKey="accuracy" name="Accuracy %" fill="hsl(var(--primary) / 0.4)" radius={[4, 4, 0, 0]} maxBarSize={40} />

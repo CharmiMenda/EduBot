@@ -15,7 +15,7 @@ export default function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isRegistering) {
-      register(formData);
+      register({ ...formData, role: "student" as const });
     } else {
       login({ email: formData.email, password: formData.password });
     }
@@ -29,7 +29,7 @@ export default function Login() {
         <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors w-fit mb-12">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Home
         </Link>
-        
+
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="mb-10">
           <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground mb-6 shadow-xl shadow-primary/30">
             <GraduationCap className="w-8 h-8" />
@@ -38,23 +38,23 @@ export default function Login() {
             {isRegistering ? "Create Account" : "Welcome Back"}
           </h1>
           <p className="text-muted-foreground mt-3 text-lg">
-            {isRegistering 
-              ? "Join your peers and accelerate your placement journey." 
+            {isRegistering
+              ? "Join your peers and accelerate your placement journey."
               : "Sign in to continue your placement preparation."}
           </p>
         </motion.div>
 
-        <motion.form 
+        <motion.form
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-          onSubmit={handleSubmit} 
+          onSubmit={handleSubmit}
           className="space-y-5"
         >
           {isRegistering && (
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input 
-                id="name" 
-                placeholder="John Doe" 
+              <Input
+                id="name"
+                placeholder="John Doe"
                 className="h-12 rounded-xl bg-secondary/50 border-transparent focus:bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
                 value={formData.name}
                 onChange={(e) => setFormData(p => ({ ...p, name: e.target.value }))}
@@ -62,13 +62,13 @@ export default function Login() {
               />
             </div>
           )}
-          
+
           <div className="space-y-2">
             <Label htmlFor="email">College Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="student@college.edu" 
+            <Input
+              id="email"
+              type="email"
+              placeholder="student@college.edu"
               className="h-12 rounded-xl bg-secondary/50 border-transparent focus:bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
               value={formData.email}
               onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))}
@@ -78,10 +78,10 @@ export default function Login() {
 
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
-              type="password" 
-              placeholder="••••••••" 
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
               className="h-12 rounded-xl bg-secondary/50 border-transparent focus:bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all"
               value={formData.password}
               onChange={(e) => setFormData(p => ({ ...p, password: e.target.value }))}
@@ -96,8 +96,8 @@ export default function Login() {
 
           <p className="text-center text-muted-foreground mt-6">
             {isRegistering ? "Already have an account? " : "Don't have an account? "}
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => setIsRegistering(!isRegistering)}
               className="text-primary font-semibold hover:underline"
             >
@@ -106,17 +106,17 @@ export default function Login() {
           </p>
         </motion.form>
       </div>
-      
+
       {/* Visual side panel */}
       <div className="hidden md:flex w-1/2 bg-primary p-12 text-primary-foreground flex-col justify-between relative overflow-hidden">
         {/* stock image of abstract shapes or college setting */}
-        <img 
-          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&h=1080&fit=crop" 
-          alt="Students collaborating" 
+        <img
+          src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&h=1080&fit=crop"
+          alt="Students collaborating"
           className="absolute inset-0 w-full h-full object-cover opacity-20 mix-blend-overlay"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/80 to-transparent mix-blend-multiply" />
-        
+
         <div className="relative z-10">
           <div className="flex gap-2">
             <div className="w-3 h-3 rounded-full bg-white/50" />

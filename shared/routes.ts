@@ -1,10 +1,10 @@
 import { z } from 'zod';
-import { 
-  insertUserSchema, users, 
-  insertCompanySchema, companies,
-  insertPlacementEventSchemaExtended, placementEvents,
-  insertMaterialSchema, materials,
-  insertTestResultSchema, testResults
+import {
+  insertUserSchema, type User,
+  insertCompanySchema, type Company,
+  insertPlacementEventSchemaExtended, type PlacementEvent,
+  insertMaterialSchema, type Material,
+  insertTestResultSchema, type TestResult
 } from './schema';
 
 export const errorSchemas = {
@@ -21,7 +21,7 @@ export const api = {
       path: '/api/auth/login' as const,
       input: z.object({ email: z.string().email(), password: z.string() }),
       responses: {
-        200: z.custom<typeof users.$inferSelect>(),
+        200: z.custom<User>(),
         401: errorSchemas.unauthorized,
       },
     },
@@ -30,7 +30,7 @@ export const api = {
       path: '/api/auth/register' as const,
       input: insertUserSchema,
       responses: {
-        201: z.custom<typeof users.$inferSelect>(),
+        201: z.custom<User>(),
         400: errorSchemas.validation,
       },
     },
@@ -38,7 +38,7 @@ export const api = {
       method: 'GET' as const,
       path: '/api/auth/me' as const,
       responses: {
-        200: z.custom<typeof users.$inferSelect>(),
+        200: z.custom<User>(),
         401: errorSchemas.unauthorized,
       },
     },
@@ -52,26 +52,26 @@ export const api = {
     list: {
       method: 'GET' as const,
       path: '/api/companies' as const,
-      responses: { 200: z.array(z.custom<typeof companies.$inferSelect>()) },
+      responses: { 200: z.array(z.custom<Company>()) },
     },
     create: {
       method: 'POST' as const,
       path: '/api/companies' as const,
       input: insertCompanySchema,
-      responses: { 201: z.custom<typeof companies.$inferSelect>(), 400: errorSchemas.validation },
+      responses: { 201: z.custom<Company>(), 400: errorSchemas.validation },
     },
   },
   placementEvents: {
     list: {
       method: 'GET' as const,
       path: '/api/placement-events' as const,
-      responses: { 200: z.array(z.custom<typeof placementEvents.$inferSelect & { company: typeof companies.$inferSelect }>()) },
+      responses: { 200: z.array(z.custom<PlacementEvent & { company: Company }>()) },
     },
     create: {
       method: 'POST' as const,
       path: '/api/placement-events' as const,
       input: insertPlacementEventSchemaExtended,
-      responses: { 201: z.custom<typeof placementEvents.$inferSelect>(), 400: errorSchemas.validation },
+      responses: { 201: z.custom<PlacementEvent>(), 400: errorSchemas.validation },
     },
   },
   materials: {
@@ -79,26 +79,26 @@ export const api = {
       method: 'GET' as const,
       path: '/api/materials' as const,
       input: z.object({ role: z.string().optional() }).optional(),
-      responses: { 200: z.array(z.custom<typeof materials.$inferSelect>()) },
+      responses: { 200: z.array(z.custom<Material>()) },
     },
     create: {
       method: 'POST' as const,
       path: '/api/materials' as const,
       input: insertMaterialSchema,
-      responses: { 201: z.custom<typeof materials.$inferSelect>(), 400: errorSchemas.validation },
+      responses: { 201: z.custom<Material>(), 400: errorSchemas.validation },
     },
   },
   testResults: {
     list: {
       method: 'GET' as const,
       path: '/api/test-results' as const,
-      responses: { 200: z.array(z.custom<typeof testResults.$inferSelect>()) },
+      responses: { 200: z.array(z.custom<TestResult>()) },
     },
     create: {
       method: 'POST' as const,
       path: '/api/test-results' as const,
       input: insertTestResultSchema,
-      responses: { 201: z.custom<typeof testResults.$inferSelect>(), 400: errorSchemas.validation },
+      responses: { 201: z.custom<TestResult>(), 400: errorSchemas.validation },
     },
   },
   chat: {
@@ -109,6 +109,8 @@ export const api = {
       responses: {
         200: z.object({
           response: z.string(),
+          recommendedMaterials: z.array(z.string()).optional(),
+          recommendedQuizzes: z.array(z.string()).optional(),
         }),
       },
     },

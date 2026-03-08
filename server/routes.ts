@@ -126,37 +126,29 @@ export async function registerRoutes(
     }
     try {
       const input = api.chat.query.input.parse(req.body);
-      
-      const response = await openai.chat.completions.create({
-        model: "gpt-5.2",
-        messages: [
-          { 
-            role: "system", 
-            content: `You are an AI assistant for a college placement preparation platform. 
-            
-            Your responses must always follow these rules:
-            1. Provide clear, structured answers using headings and bullet points.
-            2. Explain preparation strategies step-by-step.
-            3. Highlight the most important topics first.
-            4. Give practical study plans when relevant.
-            5. Keep responses concise but informative.
-            6. Ask 2–3 follow-up questions to personalize preparation.
-            7. Avoid long paragraphs. Use bullet points and sections.
-            8. Focus on actionable guidance students can follow.
 
-            Response format must always follow this structure:
-            1. Short introduction
-            2. Key sections with headings
-            3. Step-by-step preparation strategy
-            4. Practical study tips
-            5. Personalized follow-up questions`
-          },
-          { role: "user", content: input.message }
-        ],
+      // Forward the request to the Python FastAPI AI service
+      const aiResponse = await fetch("http://127.0.0.1:8000/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: req.user.id ? String(req.user.id) : "anonymous",
+          message: input.message,
+          history: [], // In a full implementation, fetch past messages
+          weak_areas: [] // Extract from TestResults
+        })
       });
 
+      if (!aiResponse.ok) {
+        throw new Error(`AI Service returned ${aiResponse.status}`);
+      }
+
+      const aiData = await aiResponse.json() as any;
+
       res.status(200).json({
-        response: response.choices[0]?.message?.content || "I'm sorry, I couldn't understand that.",
+        response: aiData.answer,
+        recommendedMaterials: aiData.recommended_materials_ids || [],
+        recommendedQuizzes: aiData.recommended_quizzes_ids || [],
       });
     } catch (err) {
       if (err instanceof z.ZodError) {
@@ -183,7 +175,7 @@ export async function seedDatabase() {
       packageInfo: "45 LPA",
       selectionProcess: "Online Assessment -> 3 Technical Interviews -> 1 HR Interview"
     });
-    
+
     const amzn = await storage.createCompany({
       name: "Amazon",
       roles: ["SDE-1", "Data Analyst"],
@@ -227,7 +219,7 @@ export async function seedDatabase() {
       link: "https://github.com/donnemartin/system-design-primer",
       tags: ["System Design", "Scalability"]
     });
-    
+
     await storage.createMaterial({
       title: "Data Science Interview Guide",
       category: "interview prep",

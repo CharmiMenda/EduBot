@@ -1,73 +1,75 @@
-import { pgTable, text, serial, timestamp, integer, boolean } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  password: text("password").notNull(),
-  role: text("role").notNull().default("student"),
-  createdAt: timestamp("created_at").defaultNow(),
+export const insertUserSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  role: z.enum(["student", "admin"]).default("student"),
 });
 
-export const companies = pgTable("companies", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  roles: text("roles").array().notNull(),
-  eligibility: text("eligibility").notNull(),
-  packageInfo: text("package_info").notNull(),
-  selectionProcess: text("selection_process").notNull(),
-});
-
-export const placementEvents = pgTable("placement_events", {
-  id: serial("id").primaryKey(),
-  companyId: integer("company_id").references(() => companies.id).notNull(),
-  date: timestamp("date").notNull(),
-  deadline: timestamp("deadline").notNull(),
-  role: text("role").notNull(),
-});
-
-export const materials = pgTable("materials", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  category: text("category").notNull(),
-  role: text("role").notNull(),
-  link: text("link").notNull(),
-  tags: text("tags").array().notNull(),
-});
-
-export const testResults = pgTable("test_results", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id).notNull(),
-  testType: text("test_type").notNull(),
-  score: integer("score").notNull(),
-  accuracy: integer("accuracy").notNull(),
-  timeTaken: integer("time_taken").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
-// Zod Schemas
-export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type User = InsertUser & { id: string, createdAt: Date };
 
-export const insertCompanySchema = createInsertSchema(companies).omit({ id: true });
+export const insertCompanySchema = z.object({
+  name: z.string().min(1, "Company name is required"),
+  roles: z.array(z.string()).min(1, "At least one role is required"),
+  eligibility: z.string().min(1, "Eligibility criteria is required"),
+  packageInfo: z.string().min(1, "Package info is required"),
+  selectionProcess: z.string().min(1, "Selection process is required"),
+});
+
 export type InsertCompany = z.infer<typeof insertCompanySchema>;
-export type Company = typeof companies.$inferSelect;
+export type Company = InsertCompany & { id: string };
 
-export const insertPlacementEventSchema = createInsertSchema(placementEvents).omit({ id: true });
+export const insertPlacementEventSchema = z.object({
+  companyId: z.string().min(1, "Company ID is required"),
+  role: z.string().min(1, "Role is required"),
+});
+
 export const insertPlacementEventSchemaExtended = insertPlacementEventSchema.extend({
   date: z.coerce.date(),
   deadline: z.coerce.date(),
 });
+
 export type InsertPlacementEvent = z.infer<typeof insertPlacementEventSchemaExtended>;
-export type PlacementEvent = typeof placementEvents.$inferSelect;
+export type PlacementEvent = InsertPlacementEvent & { id: string };
 
-export const insertMaterialSchema = createInsertSchema(materials).omit({ id: true });
+export const insertMaterialSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  category: z.string().min(1, "Category is required"),
+  role: z.string().min(1, "Role is required"),
+  link: z.string().url("Must be a valid URL"),
+  tags: z.array(z.string()),
+});
+
 export type InsertMaterial = z.infer<typeof insertMaterialSchema>;
-export type Material = typeof materials.$inferSelect;
+export type Material = InsertMaterial & { id: string };
 
-export const insertTestResultSchema = createInsertSchema(testResults).omit({ id: true, createdAt: true });
+export const insertTestResultSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  testType: z.string().min(1, "Test type is required"),
+  score: z.number().min(0),
+  accuracy: z.number().min(0).max(100),
+  timeTaken: z.number().min(0), // in seconds
+});
+
 export type InsertTestResult = z.infer<typeof insertTestResultSchema>;
-export type TestResult = typeof testResults.$inferSelect;
+export type TestResult = InsertTestResult & { id: string, createdAt: Date };
+
+export const insertConversationSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+});
+
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export type Conversation = InsertConversation & { id: string, createdAt: Date };
+
+export const insertMessageSchema = z.object({
+  conversationId: z.string().min(1, "Conversation ID is required"),
+  role: z.string().min(1, "Role is required"),
+  content: z.string().min(1, "Content is required"),
+  recommendedMaterials: z.array(z.string()).optional(),
+  recommendedQuizzes: z.array(z.string()).optional(),
+});
+
+export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type Message = InsertMessage & { id: string, createdAt: Date };

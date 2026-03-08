@@ -1,10 +1,9 @@
-import { db } from "./db";
-import { eq } from "drizzle-orm";
 import session from "express-session";
-import connectPg from "connect-pg-simple";
-import { pool } from "./db";
+import MongoStore from "connect-mongo";
 import {
-  users, companies, placementEvents, materials, testResults,
+  UserModel, CompanyModel, PlacementEventModel, MaterialModel, TestResultModel
+} from "./models";
+import {
   type User, type InsertUser,
   type Company, type InsertCompany,
   type PlacementEvent, type InsertPlacementEvent,
@@ -12,10 +11,8 @@ import {
   type TestResult, type InsertTestResult
 } from "@shared/schema";
 
-const PostgresSessionStore = connectPg(session);
-
 export interface IStorage {
-  getUser(id: number): Promise<User | undefined>;
+  getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
 
@@ -28,7 +25,7 @@ export interface IStorage {
   getMaterials(role?: string): Promise<Material[]>;
   createMaterial(material: InsertMaterial): Promise<Material>;
 
-  getTestResults(userId?: number): Promise<TestResult[]>;
+  getTestResults(userId?: string): Promise<TestResult[]>;
   createTestResult(result: InsertTestResult): Promise<TestResult>;
 
   sessionStore: session.Store;
@@ -38,75 +35,84 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.sessionStore = new PostgresSessionStore({
-      pool,
-      createTableIfMissing: true,
+    if (!process.env.DATABASE_URL) {
+      throw new Error("DATABASE_URL is not set");
+    }
+    this.sessionStore = MongoStore.create({
+      mongoUrl: process.env.DATABASE_URL,
+      collectionName: 'sessions'
     });
   }
 
-  async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+  async getUser(id: string): Promise<User | undefined> {
+    const user = await UserModel.findById(id);
+    return user ? user.toJSON() : undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.email, username));
-    return user;
+    const user = await UserModel.findOne({ email: username });
+    return user ? user.toJSON() : undefined;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
+    const user = await UserModel.create(insertUser);
+    return user.toJSON();
   }
 
   async getCompanies(): Promise<Company[]> {
-    return await db.select().from(companies);
+    const companies = await CompanyModel.find();
+    return companies.map(c => c.toJSON());
   }
 
   async createCompany(insertCompany: InsertCompany): Promise<Company> {
-    const [company] = await db.insert(companies).values(insertCompany).returning();
-    return company;
+    const company = await CompanyModel.create(insertCompany);
+    return company.toJSON();
   }
 
   async getPlacementEvents(): Promise<(PlacementEvent & { company: Company })[]> {
-    const events = await db
-      .select({
-        event: placementEvents,
-        company: companies,
-      })
-      .from(placementEvents)
-      .innerJoin(companies, eq(placementEvents.companyId, companies.id));
-      
-    return events.map(({ event, company }) => ({ ...event, company }));
+    const events = await PlacementEventModel.find();
+    const companies = await CompanyModel.find({ _id: { $in: events.map(e => e.companyId) } });
+
+    return events.map(event => {
+      const company = companies.find(c => String(c._id) === event.companyId);
+      return {
+        ...event.toJSON(),
+        company: company ? company.toJSON() : null as any
+      };
+    });
   }
 
   async createPlacementEvent(insertEvent: InsertPlacementEvent): Promise<PlacementEvent> {
-    const [event] = await db.insert(placementEvents).values(insertEvent).returning();
-    return event;
+    const event = await PlacementEventModel.create(insertEvent);
+    return event.toJSON();
   }
 
   async getMaterials(role?: string): Promise<Material[]> {
     if (role) {
-      return await db.select().from(materials).where(eq(materials.role, role));
+      const materials = await MaterialModel.find({ role });
+      return materials.map(m => m.toJSON());
     }
-    return await db.select().from(materials);
+    const materials = await MaterialModel.find();
+    return materials.map(m => m.toJSON());
   }
 
   async createMaterial(insertMaterial: InsertMaterial): Promise<Material> {
-    const [material] = await db.insert(materials).values(insertMaterial).returning();
-    return material;
+    const material = await MaterialModel.create(insertMaterial);
+    return material.toJSON();
   }
 
-  async getTestResults(userId?: number): Promise<TestResult[]> {
+  async getTestResults(userId?: string): Promise<TestResult[]> {
     if (userId) {
-      return await db.select().from(testResults).where(eq(testResults.userId, userId));
+      const results = await TestResultModel.find({ userId });
+      return results.map(r => r.toJSON());
     }
-    return await db.select().from(testResults);
+    const results = await TestResultModel.find();
+    return results.map(r => r.toJSON());
   }
 
   async createTestResult(insertResult: InsertTestResult): Promise<TestResult> {
-    const [result] = await db.insert(testResults).values(insertResult).returning();
-    return result;
+    const result = await TestResultModel.create(insertResult);
+    return result.toJSON();
   }
 }
 

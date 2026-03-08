@@ -8,9 +8,9 @@ import { useLocation } from "wouter";
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
-  login: ReturnType<typeof useLoginMutation>["mutate"];
-  register: ReturnType<typeof useRegisterMutation>["mutate"];
-  logout: ReturnType<typeof useLogoutMutation>["mutate"];
+  login: (credentials: { email: string; password: string }) => void;
+  register: (data: InsertUser) => void;
+  logout: () => void;
   isLoginPending: boolean;
   isRegisterPending: boolean;
   isLogoutPending: boolean;

@@ -16,7 +16,7 @@ export default function Dashboard() {
 
   const upcomingEvents = events?.filter(e => new Date(e.date) > new Date()).slice(0, 3) || [];
   const recentTests = tests?.slice(0, 3) || [];
-  
+
   const avgScore = tests?.length ? Math.round(tests.reduce((acc, t) => acc + t.score, 0) / tests.length) : 0;
   const avgAccuracy = tests?.length ? Math.round(tests.reduce((acc, t) => acc + t.accuracy, 0) / tests.length) : 0;
 
@@ -40,7 +40,7 @@ export default function Dashboard() {
           { label: "Accuracy", value: `${avgAccuracy}%`, icon: Target },
           { label: "Upcoming Drives", value: upcomingEvents.length, icon: Building2 },
         ].map((stat, i) => (
-          <motion.div 
+          <motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
             className="bg-card p-6 rounded-2xl border border-border shadow-sm"
@@ -62,8 +62,8 @@ export default function Dashboard() {
         {/* Upcoming Events */}
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm">
           <div className="p-6 border-b border-border flex justify-between items-center bg-secondary/20">
-            <h2 className="text-xl font-bold flex items-center gap-2"><CalendarIcon className="w-5 h-5 text-primary"/> Upcoming Drives</h2>
-            <Link href="/calendar" className="text-sm font-medium text-primary hover:underline flex items-center">View All <ChevronRight className="w-4 h-4"/></Link>
+            <h2 className="text-xl font-bold flex items-center gap-2"><CalendarIcon className="w-5 h-5 text-primary" /> Upcoming Drives</h2>
+            <Link href="/calendar" className="text-sm font-medium text-primary hover:underline flex items-center">View All <ChevronRight className="w-4 h-4" /></Link>
           </div>
           <div className="p-6 space-y-4">
             {upcomingEvents.length === 0 ? (
@@ -93,8 +93,8 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="bg-card rounded-3xl border border-border overflow-hidden shadow-sm">
           <div className="p-6 border-b border-border flex justify-between items-center bg-secondary/20">
-            <h2 className="text-xl font-bold flex items-center gap-2"><Clock className="w-5 h-5 text-primary"/> Recent Tests</h2>
-            <Link href="/tests" className="text-sm font-medium text-primary hover:underline flex items-center">View Analytics <ChevronRight className="w-4 h-4"/></Link>
+            <h2 className="text-xl font-bold flex items-center gap-2"><Clock className="w-5 h-5 text-primary" /> Recent Tests</h2>
+            <Link href="/tests" className="text-sm font-medium text-primary hover:underline flex items-center">View Analytics <ChevronRight className="w-4 h-4" /></Link>
           </div>
           <div className="p-6 space-y-4">
             {recentTests.length === 0 ? (
@@ -121,5 +121,5 @@ export default function Dashboard() {
 }
 
 // Quick hack to reuse icons without adding them to imports constantly
-function BookOpen(props: any) { return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinelinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>; }
-function Briefcase(props: any) { return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinelinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>; }
+function BookOpen(props: any) { return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>; }
+function Briefcase(props: any) { return <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>; }

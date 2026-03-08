@@ -59,10 +59,13 @@ app.use((req, res, next) => {
   next();
 });
 
+import { connectDB } from "./db";
+
 (async () => {
+  await connectDB();
   const { seedDatabase } = await import("./routes");
   await registerRoutes(httpServer, app);
-  
+
   await seedDatabase().catch(console.error);
 
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
@@ -97,7 +100,6 @@ app.use((req, res, next) => {
     {
       port,
       host: "0.0.0.0",
-      reusePort: true,
     },
     () => {
       log(`serving on port ${port}`);

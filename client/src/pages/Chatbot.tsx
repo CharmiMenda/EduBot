@@ -4,8 +4,15 @@ import { Send, Bot, User as UserIcon, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 
-type Message = { role: "user" | "bot"; content: string; id: string };
+type Message = {
+  role: "user" | "bot";
+  content: string;
+  id: string;
+  recommendedMaterials?: string[];
+  recommendedQuizzes?: string[];
+};
 
 export default function Chatbot() {
   const { mutate: sendMessage, isPending } = useChatQuery();
@@ -29,7 +36,13 @@ export default function Chatbot() {
 
     sendMessage(userMsg, {
       onSuccess: (data) => {
-        setMessages(prev => [...prev, { role: "bot", content: data.response, id: (Date.now() + 1).toString() }]);
+        setMessages(prev => [...prev, {
+          role: "bot",
+          content: data.response,
+          id: (Date.now() + 1).toString(),
+          recommendedMaterials: data.recommendedMaterials,
+          recommendedQuizzes: data.recommendedQuizzes
+        }]);
       },
       onError: () => {
         setMessages(prev => [...prev, { role: "bot", content: "Sorry, I couldn't process that request. Please try again.", id: (Date.now() + 1).toString() }]);
@@ -65,12 +78,29 @@ export default function Chatbot() {
               <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm ${msg.role === 'user' ? 'bg-foreground text-background' : 'bg-primary text-primary-foreground'}`}>
                 {msg.role === 'user' ? <UserIcon className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
-              <div className={`p-4 rounded-2xl ${
-                msg.role === 'user' 
-                  ? 'bg-foreground text-background rounded-tr-sm' 
-                  : 'bg-card border border-border text-foreground shadow-sm rounded-tl-sm'
-              }`}>
-                <p className="leading-relaxed text-sm">{msg.content}</p>
+              <div className={`p-4 rounded-2xl overflow-hidden ${msg.role === 'user'
+                ? 'bg-foreground text-background rounded-tr-sm'
+                : 'bg-card border border-border text-foreground shadow-sm rounded-tl-sm'
+                }`}>
+                {msg.role === 'user' ? (
+                  <p className="leading-relaxed text-sm">{msg.content}</p>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-sm leading-relaxed prose-p:leading-relaxed prose-pre:bg-secondary/50 prose-pre:text-secondary-foreground">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                    {((msg.recommendedMaterials && msg.recommendedMaterials.length > 0) || (msg.recommendedQuizzes && msg.recommendedQuizzes.length > 0)) ? (
+                      <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-border/50">
+                        {msg.recommendedMaterials?.map((mat, i) => (
+                          <div key={`mat-${i}`} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-md font-medium">📚 {mat}</div>
+                        ))}
+                        {msg.recommendedQuizzes?.map((quiz, i) => (
+                          <div key={`quiz-${i}`} className="text-xs bg-amber-500/10 text-amber-600 px-2 py-1 rounded-md font-medium">📝 {quiz}</div>
+                        ))}
+                      </div>
+                    ) : null}
+                  </div>
+                )}
               </div>
             </motion.div>
           ))}
@@ -95,15 +125,15 @@ export default function Chatbot() {
       {/* Input Area */}
       <div className="p-4 bg-background border-t border-border z-10">
         <form onSubmit={handleSend} className="flex gap-3 relative">
-          <Input 
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about interview tips, resume building..." 
+            placeholder="Ask about interview tips, resume building..."
             className="flex-1 h-14 rounded-2xl bg-secondary/50 border-transparent focus:bg-background focus:border-primary focus:ring-4 focus:ring-primary/10 pr-14 text-base"
           />
-          <Button 
-            type="submit" 
-            size="icon" 
+          <Button
+            type="submit"
+            size="icon"
             disabled={!input.trim() || isPending}
             className="absolute right-2 top-2 bottom-2 h-10 w-10 rounded-xl shadow-md hover:scale-105 transition-transform"
           >
